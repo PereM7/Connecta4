@@ -20,14 +20,18 @@ public class Connecta4 {
         return matriu;
     }
 
-    private void inserirFitxa (char[][] matriu, int columna, char jugador) {
+    private void inserirFitxa (char[][] matriu, int fila, int columna, int torn) {
 
-        for (int fila = matriu.length - 1; fila >= 0 ; fila--) {
+
 
              if (matriu[fila][columna] == ' ') {
-                 matriu[fila][columna] = jugador;
+                 if (torn % 2 == 0){
+                    matriu[fila][columna] = JUGADOR_1;
+                 }
+                 else {
+                     matriu[fila][columna] = JUGADOR_2;
+                 }
              }
-        }
     }
 
     private boolean casellesPlenas (char[][] matriu) {
@@ -188,6 +192,24 @@ public class Connecta4 {
         return -1;
     }
 
+    private int haConnectat (char[][] matriu, int fila, int columna) {
+
+        if (haConnectatHoritzontal(matriu, fila) != -1) {
+            return haConnectatHoritzontal(matriu, fila);
+        }
+        else if (haConnectatVertical(matriu, columna) != -1) {
+            return haConnectatVertical(matriu, fila);
+        }
+        else if (haConnectatDiagonalDreta(matriu) != -1) {
+            return haConnectatDiagonalDreta(matriu);
+        }
+        else if (haConnectatDiagonalEsquerra(matriu) != -1) {
+            return haConnectatDiagonalEsquerra(matriu);
+        }
+
+        return -1;
+    }
+
     private void displayJoc (char[][] matriu, int torn) {
 
         for (int fila = 0; fila < matriu.length; fila++) {
@@ -208,6 +230,29 @@ public class Connecta4 {
         }
     }
 
-    public void jugar(int altura, int amplari) {}
+    private int calcFila (char[][] matriu, int columna) {
+
+        for (int fila = matriu.length - 1; fila >= 0 ; fila--) {
+
+            if (matriu[fila][columna] == ' ') {
+                return columna;
+            }
+        }
+        return -1;
+    }
+
+    public void jugar() {
+
+        char[][] tablero = iniciarMatriuChar();
+        int columna = 0;
+        int fila = 0;
+        int torn = 0;
+
+        do {
+            displayJoc(tablero, torn);
+
+        }while (haConnectat(tablero, fila, columna));
+
+    }
 }
 
