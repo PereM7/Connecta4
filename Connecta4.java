@@ -1,5 +1,7 @@
 package Principi.Reptes.Connecta4;
 
+import java.util.Scanner;
+
 public class Connecta4 {
 
     private final int ALTURA_JOC = 6;
@@ -162,7 +164,7 @@ public class Connecta4 {
         for (int fila = (matriu.length - 1); (fila >= 3); fila--) {
             for (int columna = 0; (columna < (matriu[fila].length - 3)); columna++) {
 
-                for (int indexX = fila, indexY = columna; (indexY < ALTURA_JOC) && (indexX >= 0); indexX--, indexY++) {
+                for (int indexX = fila, indexY = columna; (indexY < AMPLARI_JOC) && (indexX >= 0); indexX--, indexY++) {
 
                     if (matriu[indexX][indexY] == 'x') {
                         contadorX++;
@@ -198,7 +200,7 @@ public class Connecta4 {
             return haConnectatHoritzontal(matriu, fila);
         }
         else if (haConnectatVertical(matriu, columna) != -1) {
-            return haConnectatVertical(matriu, fila);
+            return haConnectatVertical(matriu, columna);
         }
         else if (haConnectatDiagonalDreta(matriu) != -1) {
             return haConnectatDiagonalDreta(matriu);
@@ -210,7 +212,7 @@ public class Connecta4 {
         return -1;
     }
 
-    private void displayJoc (char[][] matriu, int torn) {
+    private void displayJoc (char[][] matriu) {
 
         for (int fila = 0; fila < matriu.length; fila++) {
             for (int column = 0; column < matriu[fila].length; column++) {
@@ -223,6 +225,9 @@ public class Connecta4 {
             System.out.println();
         }
         System.out.println();
+    }
+
+    private void displayTorn(int torn) {
         if (torn % 2 == 0) {
             System.out.println("Torn de: " + JUGADOR_1);
         }else {
@@ -235,24 +240,58 @@ public class Connecta4 {
         for (int fila = matriu.length - 1; fila >= 0 ; fila--) {
 
             if (matriu[fila][columna] == ' ') {
-                return columna;
+                return fila;
             }
         }
         return -1;
     }
 
+    private void missatgeFinal (int jugador, boolean tableroPle) {
+
+        if (jugador == 1) {
+            System.out.println("Enhorabona, ha guanyat X");
+        }
+        else if (jugador == 2) {
+            System.out.println("Enhorabona, ha guanyat O");
+        }
+        else {
+            System.out.println("Error, no ha guanyat ningu");
+        }
+
+        if (tableroPle) {
+            System.out.println("Empat, el tablero és ple.");
+        }
+    }
+
     public void jugar() {
 
+        Scanner sn = new Scanner(System.in);
         char[][] tablero = iniciarMatriuChar();
         int columna = 0;
         int fila = 0;
         int torn = 0;
 
         do {
-            displayJoc(tablero, torn);
+            displayJoc(tablero);
+            displayTorn(torn);
 
-        }while (haConnectat(tablero, fila, columna));
+            do {
+                System.out.println("Introdueix columna (0-6):");
+                columna = sn.nextInt();
 
+                if(columna < 0 || columna > 6) {
+                    System.out.println("Columna incorrecte, ha de ser de 0 a 6.");
+                }
+            } while(columna < 0 || columna > 6);
+
+            fila = calcFila(tablero, columna);
+            inserirFitxa(tablero, fila, columna, torn);
+            torn++;
+
+        }while (haConnectat(tablero, fila, columna) == -1 && !casellesPlenas(tablero));
+
+        displayJoc(tablero);
+        missatgeFinal(haConnectat(tablero, fila, columna), casellesPlenas(tablero));
     }
 }
 

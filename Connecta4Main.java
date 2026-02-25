@@ -14,6 +14,6 @@ public class Connecta4Main {
         };
 
         Connecta4 joc = new Connecta4();
-
+        joc.jugar();
     }
 }
